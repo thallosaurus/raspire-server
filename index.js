@@ -14,7 +14,7 @@ class Server
             console.log("raspire -b1 by moshi86");
             port = p;
             http = require('http').createServer(function(req, res) {
-                fs.readFile(__dirname + '/debugController.html',
+                fs.readFile(__dirname + '/html/debugController.html',
                 function(err, data)
                 {
                     res.writeHead(200);
