@@ -1,0 +1,64 @@
+<html>
+    <head>
+        <style>
+        #controller {
+            opacity: 0;
+        }
+        </style>
+    </head>
+
+    <body>
+        <div id="controller">
+            <a href="#" onclick="sendData()">Send some Data</a><br>
+            <a href="#" onclick="connectToSocket()">Connect</a><br>
+            <input type="text" id="textInput">
+            <a href="#" onclick="sendMessage()">Send Message</a><br>
+        </div>
+    </body>
+
+    <script src="/socket.io/socket.io.js"></script>
+        <script>
+            var socket;
+
+            var req = {
+                cmd: 0,
+                arg: 0
+            }
+            function unhideController() {
+                document.getElementById("controller").style.opacity = 1;
+            }
+                socket = io('http://localhost:3000');
+                if (socket != null) {
+                    unhideController();
+                }
+
+                socket.on("pingback", function(data) {
+                    alert(data);
+                });
+                socket.on('unimplementedFunc', (data) => {
+                    console.log(data);
+                    //console.log(data['response']);
+                    alert(data);
+                });
+                socket.on('server_data', (data) => {
+                    alert(data);
+                })
+
+                function sendData() {
+                    req['cmd'] = 'ping';
+                    socket.emit('data', req);
+                }
+
+                function connectToSocket() {
+                    req['arg'] = socket.id;
+                    req['cmd'] = 'authentication';
+                    socket.emit('data', req);
+                }
+
+                function sendMessage() {
+                    req['cmd'] = 'message';
+                    req['arg'] = document.getElementById("textInput").value;
+                    socket.emit('data', req);
+                }
+            </script>
+</html>
